@@ -67,7 +67,8 @@ $sifirst = optional_param('sifirst', 'all', PARAM_NOTAGS);
 $silast  = optional_param('silast', 'all', PARAM_NOTAGS);
 
 // Whether to show extra user identity information
-$extrafields = get_extra_user_fields($context);
+//$extrafields = get_extra_user_fields($context); // Function deprecated.
+$extrafields = \core_user\fields::for_identity($context)->get_required_fields();
 $leftcols = 2 + count($extrafields); //tk
 
 // Check permissions
@@ -441,7 +442,8 @@ if (!$csv) {
     // Print user identity columns
     foreach ($extrafields as $field) {
         echo '<th scope="col" class="completion-identifyfield">' .
-                get_user_field_name($field) . '</th>';
+                //get_user_field_name($field) . '</th>'; // Function deprecated.
+                \core_user\fields::get_display_name($field) . '</th>';
     }
 	
 	//tk grade header
@@ -516,7 +518,8 @@ if (!$csv) {
     $row[] = get_string('id', 'report_adv_completion');
     $row[] = get_string('name', 'report_adv_completion');
     foreach ($extrafields as $field) {
-       $row[] = get_user_field_name($field);
+       //$row[] = get_user_field_name($field); // Function deprecated.
+       $row[] = \core_user\fields::get_display_name($field);
     }
     $row[] = get_string('grade', 'report_adv_completion'); //tk grade header
 
